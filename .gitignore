@@ -1,0 +1,17 @@
+# Environment / tooling
+/.claude
+/.venv
+__pycache__/
+*.pyc
+
+# Dataset (large; download via load_data.py)
+/dataset
+
+# Generated experiment artifacts (checkpoints, synthetic data, figures)
+/runs
+/outputs
+/outputs_rgb
+
+# Model / data binaries anywhere
+*.pt
+*.npz
