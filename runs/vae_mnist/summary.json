@@ -1,0 +1,464 @@
+{
+  "config": {
+    "generations": 50,
+    "epochs": 60,
+    "num_synth": 10000,
+    "batch_size": 128,
+    "lr": 0.001,
+    "real_fraction": 0.0,
+    "output_root": "runs/vae_mnist",
+    "seed": 42
+  },
+  "rows": [
+    {
+      "generation": 0,
+      "source": "real",
+      "fid": 226.4743,
+      "test_bce": 98.4314,
+      "sample_pixel_std": 0.141543,
+      "mean_pairwise_l2": 7.696871,
+      "post_std_mean": 0.141999
+    },
+    {
+      "generation": 1,
+      "source": "gen0 samples",
+      "fid": 336.7608,
+      "test_bce": 107.3626,
+      "sample_pixel_std": 0.133701,
+      "mean_pairwise_l2": 7.195333,
+      "post_std_mean": 0.097401
+    },
+    {
+      "generation": 2,
+      "source": "gen1 samples",
+      "fid": 422.6809,
+      "test_bce": 113.4764,
+      "sample_pixel_std": 0.122774,
+      "mean_pairwise_l2": 6.665679,
+      "post_std_mean": 0.130328
+    },
+    {
+      "generation": 3,
+      "source": "gen2 samples",
+      "fid": 492.0138,
+      "test_bce": 118.0029,
+      "sample_pixel_std": 0.117245,
+      "mean_pairwise_l2": 6.361171,
+      "post_std_mean": 0.074504
+    },
+    {
+      "generation": 4,
+      "source": "gen3 samples",
+      "fid": 548.0551,
+      "test_bce": 120.4171,
+      "sample_pixel_std": 0.111395,
+      "mean_pairwise_l2": 6.052866,
+      "post_std_mean": 0.074394
+    },
+    {
+      "generation": 5,
+      "source": "gen4 samples",
+      "fid": 627.2327,
+      "test_bce": 123.5299,
+      "sample_pixel_std": 0.100646,
+      "mean_pairwise_l2": 5.514974,
+      "post_std_mean": 0.129292
+    },
+    {
+      "generation": 6,
+      "source": "gen5 samples",
+      "fid": 700.3141,
+      "test_bce": 131.3259,
+      "sample_pixel_std": 0.095918,
+      "mean_pairwise_l2": 5.194742,
+      "post_std_mean": 0.061494
+    },
+    {
+      "generation": 7,
+      "source": "gen6 samples",
+      "fid": 752.7304,
+      "test_bce": 134.9678,
+      "sample_pixel_std": 0.090594,
+      "mean_pairwise_l2": 4.926755,
+      "post_std_mean": 0.061315
+    },
+    {
+      "generation": 8,
+      "source": "gen7 samples",
+      "fid": 819.5965,
+      "test_bce": 136.1592,
+      "sample_pixel_std": 0.089538,
+      "mean_pairwise_l2": 4.862464,
+      "post_std_mean": 0.061251
+    },
+    {
+      "generation": 9,
+      "source": "gen8 samples",
+      "fid": 877.5477,
+      "test_bce": 137.3208,
+      "sample_pixel_std": 0.084484,
+      "mean_pairwise_l2": 4.582682,
+      "post_std_mean": 0.06138
+    },
+    {
+      "generation": 10,
+      "source": "gen9 samples",
+      "fid": 977.7217,
+      "test_bce": 140.1902,
+      "sample_pixel_std": 0.077448,
+      "mean_pairwise_l2": 4.205376,
+      "post_std_mean": 0.101242
+    },
+    {
+      "generation": 11,
+      "source": "gen10 samples",
+      "fid": 1067.9603,
+      "test_bce": 149.6608,
+      "sample_pixel_std": 0.069171,
+      "mean_pairwise_l2": 3.789396,
+      "post_std_mean": 0.048335
+    },
+    {
+      "generation": 12,
+      "source": "gen11 samples",
+      "fid": 1124.3741,
+      "test_bce": 151.0112,
+      "sample_pixel_std": 0.067944,
+      "mean_pairwise_l2": 3.708286,
+      "post_std_mean": 0.047862
+    },
+    {
+      "generation": 13,
+      "source": "gen12 samples",
+      "fid": 1184.8319,
+      "test_bce": 151.858,
+      "sample_pixel_std": 0.062666,
+      "mean_pairwise_l2": 3.424005,
+      "post_std_mean": 0.048219
+    },
+    {
+      "generation": 14,
+      "source": "gen13 samples",
+      "fid": 1278.2895,
+      "test_bce": 155.2294,
+      "sample_pixel_std": 0.055704,
+      "mean_pairwise_l2": 3.054124,
+      "post_std_mean": 0.074808
+    },
+    {
+      "generation": 15,
+      "source": "gen14 samples",
+      "fid": 1376.3142,
+      "test_bce": 164.8794,
+      "sample_pixel_std": 0.049691,
+      "mean_pairwise_l2": 2.73543,
+      "post_std_mean": 0.035973
+    },
+    {
+      "generation": 16,
+      "source": "gen15 samples",
+      "fid": 1420.2025,
+      "test_bce": 166.7436,
+      "sample_pixel_std": 0.045934,
+      "mean_pairwise_l2": 2.514303,
+      "post_std_mean": 0.035611
+    },
+    {
+      "generation": 17,
+      "source": "gen16 samples",
+      "fid": 1470.2673,
+      "test_bce": 168.8563,
+      "sample_pixel_std": 0.043432,
+      "mean_pairwise_l2": 2.385913,
+      "post_std_mean": 0.035672
+    },
+    {
+      "generation": 18,
+      "source": "gen17 samples",
+      "fid": 1519.7607,
+      "test_bce": 171.5738,
+      "sample_pixel_std": 0.039026,
+      "mean_pairwise_l2": 2.142946,
+      "post_std_mean": 0.036251
+    },
+    {
+      "generation": 19,
+      "source": "gen18 samples",
+      "fid": 1631.4284,
+      "test_bce": 184.6531,
+      "sample_pixel_std": 0.032957,
+      "mean_pairwise_l2": 1.808197,
+      "post_std_mean": 0.024574
+    },
+    {
+      "generation": 20,
+      "source": "gen19 samples",
+      "fid": 1665.9224,
+      "test_bce": 185.9218,
+      "sample_pixel_std": 0.029393,
+      "mean_pairwise_l2": 1.629137,
+      "post_std_mean": 0.023366
+    },
+    {
+      "generation": 21,
+      "source": "gen20 samples",
+      "fid": 1714.3053,
+      "test_bce": 190.9972,
+      "sample_pixel_std": 0.023604,
+      "mean_pairwise_l2": 1.312023,
+      "post_std_mean": 0.061421
+    },
+    {
+      "generation": 22,
+      "source": "gen21 samples",
+      "fid": 1751.685,
+      "test_bce": 196.4482,
+      "sample_pixel_std": 0.019961,
+      "mean_pairwise_l2": 1.120465,
+      "post_std_mean": 0.01201
+    },
+    {
+      "generation": 23,
+      "source": "gen22 samples",
+      "fid": 1772.4387,
+      "test_bce": 197.0296,
+      "sample_pixel_std": 0.01867,
+      "mean_pairwise_l2": 1.054792,
+      "post_std_mean": 0.012043
+    },
+    {
+      "generation": 24,
+      "source": "gen23 samples",
+      "fid": 1793.1901,
+      "test_bce": 197.7885,
+      "sample_pixel_std": 0.016096,
+      "mean_pairwise_l2": 0.903651,
+      "post_std_mean": 0.011885
+    },
+    {
+      "generation": 25,
+      "source": "gen24 samples",
+      "fid": 1815.6364,
+      "test_bce": 198.8069,
+      "sample_pixel_std": 0.014086,
+      "mean_pairwise_l2": 0.799108,
+      "post_std_mean": 0.011572
+    },
+    {
+      "generation": 26,
+      "source": "gen25 samples",
+      "fid": 1843.977,
+      "test_bce": 199.8025,
+      "sample_pixel_std": 0.010247,
+      "mean_pairwise_l2": 0.580326,
+      "post_std_mean": 0.011024
+    },
+    {
+      "generation": 27,
+      "source": "gen26 samples",
+      "fid": 1900.4827,
+      "test_bce": 204.8864,
+      "sample_pixel_std": 0.00513,
+      "mean_pairwise_l2": 0.289185,
+      "post_std_mean": 0.04745
+    },
+    {
+      "generation": 28,
+      "source": "gen27 samples",
+      "fid": 1941.2312,
+      "test_bce": 210.5365,
+      "sample_pixel_std": 0.000908,
+      "mean_pairwise_l2": 0.050238,
+      "post_std_mean": 0.000247
+    },
+    {
+      "generation": 29,
+      "source": "gen28 samples",
+      "fid": 1941.6953,
+      "test_bce": 210.5416,
+      "sample_pixel_std": 0.000812,
+      "mean_pairwise_l2": 0.045851,
+      "post_std_mean": 6.5e-05
+    },
+    {
+      "generation": 30,
+      "source": "gen29 samples",
+      "fid": 1941.5968,
+      "test_bce": 210.5431,
+      "sample_pixel_std": 0.000807,
+      "mean_pairwise_l2": 0.045833,
+      "post_std_mean": 4.2e-05
+    },
+    {
+      "generation": 31,
+      "source": "gen30 samples",
+      "fid": 1941.7902,
+      "test_bce": 210.5458,
+      "sample_pixel_std": 0.000818,
+      "mean_pairwise_l2": 0.04632,
+      "post_std_mean": 4.4e-05
+    },
+    {
+      "generation": 32,
+      "source": "gen31 samples",
+      "fid": 1941.657,
+      "test_bce": 210.544,
+      "sample_pixel_std": 0.000822,
+      "mean_pairwise_l2": 0.046201,
+      "post_std_mean": 4e-05
+    },
+    {
+      "generation": 33,
+      "source": "gen32 samples",
+      "fid": 1941.8372,
+      "test_bce": 210.5481,
+      "sample_pixel_std": 0.000791,
+      "mean_pairwise_l2": 0.044691,
+      "post_std_mean": 4.5e-05
+    },
+    {
+      "generation": 34,
+      "source": "gen33 samples",
+      "fid": 1941.7494,
+      "test_bce": 210.5467,
+      "sample_pixel_std": 0.000823,
+      "mean_pairwise_l2": 0.04681,
+      "post_std_mean": 4.3e-05
+    },
+    {
+      "generation": 35,
+      "source": "gen34 samples",
+      "fid": 1941.8079,
+      "test_bce": 210.5562,
+      "sample_pixel_std": 0.000824,
+      "mean_pairwise_l2": 0.046136,
+      "post_std_mean": 4.8e-05
+    },
+    {
+      "generation": 36,
+      "source": "gen35 samples",
+      "fid": 1941.798,
+      "test_bce": 210.5551,
+      "sample_pixel_std": 0.000849,
+      "mean_pairwise_l2": 0.047026,
+      "post_std_mean": 4.8e-05
+    },
+    {
+      "generation": 37,
+      "source": "gen36 samples",
+      "fid": 1941.8836,
+      "test_bce": 210.5614,
+      "sample_pixel_std": 0.000796,
+      "mean_pairwise_l2": 0.045509,
+      "post_std_mean": 5.5e-05
+    },
+    {
+      "generation": 38,
+      "source": "gen37 samples",
+      "fid": 1941.8076,
+      "test_bce": 210.5607,
+      "sample_pixel_std": 0.000809,
+      "mean_pairwise_l2": 0.045626,
+      "post_std_mean": 4.8e-05
+    },
+    {
+      "generation": 39,
+      "source": "gen38 samples",
+      "fid": 1941.5546,
+      "test_bce": 210.5629,
+      "sample_pixel_std": 0.000882,
+      "mean_pairwise_l2": 0.049041,
+      "post_std_mean": 3.9e-05
+    },
+    {
+      "generation": 40,
+      "source": "gen39 samples",
+      "fid": 1941.8315,
+      "test_bce": 210.5572,
+      "sample_pixel_std": 0.000828,
+      "mean_pairwise_l2": 0.046733,
+      "post_std_mean": 5.8e-05
+    },
+    {
+      "generation": 41,
+      "source": "gen40 samples",
+      "fid": 1941.7583,
+      "test_bce": 210.5536,
+      "sample_pixel_std": 0.000823,
+      "mean_pairwise_l2": 0.045952,
+      "post_std_mean": 4.3e-05
+    },
+    {
+      "generation": 42,
+      "source": "gen41 samples",
+      "fid": 1941.9091,
+      "test_bce": 210.5487,
+      "sample_pixel_std": 0.000803,
+      "mean_pairwise_l2": 0.045546,
+      "post_std_mean": 5.4e-05
+    },
+    {
+      "generation": 43,
+      "source": "gen42 samples",
+      "fid": 1941.9218,
+      "test_bce": 210.5485,
+      "sample_pixel_std": 0.000791,
+      "mean_pairwise_l2": 0.044447,
+      "post_std_mean": 4.4e-05
+    },
+    {
+      "generation": 44,
+      "source": "gen43 samples",
+      "fid": 1941.6437,
+      "test_bce": 210.5458,
+      "sample_pixel_std": 0.000852,
+      "mean_pairwise_l2": 0.047553,
+      "post_std_mean": 4.3e-05
+    },
+    {
+      "generation": 45,
+      "source": "gen44 samples",
+      "fid": 1941.7905,
+      "test_bce": 210.5403,
+      "sample_pixel_std": 0.000813,
+      "mean_pairwise_l2": 0.046192,
+      "post_std_mean": 5.1e-05
+    },
+    {
+      "generation": 46,
+      "source": "gen45 samples",
+      "fid": 1941.8103,
+      "test_bce": 210.5377,
+      "sample_pixel_std": 0.000796,
+      "mean_pairwise_l2": 0.045041,
+      "post_std_mean": 4.2e-05
+    },
+    {
+      "generation": 47,
+      "source": "gen46 samples",
+      "fid": 1941.5993,
+      "test_bce": 210.5329,
+      "sample_pixel_std": 0.000816,
+      "mean_pairwise_l2": 0.046187,
+      "post_std_mean": 4.5e-05
+    },
+    {
+      "generation": 48,
+      "source": "gen47 samples",
+      "fid": 1941.6444,
+      "test_bce": 210.5347,
+      "sample_pixel_std": 0.00083,
+      "mean_pairwise_l2": 0.046563,
+      "post_std_mean": 4.5e-05
+    },
+    {
+      "generation": 49,
+      "source": "gen48 samples",
+      "fid": 1941.6931,
+      "test_bce": 210.536,
+      "sample_pixel_std": 0.000824,
+      "mean_pairwise_l2": 0.046457,
+      "post_std_mean": 4.4e-05
+    }
+  ]
+}
