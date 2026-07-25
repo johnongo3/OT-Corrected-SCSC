@@ -94,6 +94,23 @@ The same machinery runs on RGB faces via a convolutional VAE.
 </tr>
 </table>
 
+Run the loop for 50 generations and the same collapse appears — and the same correction stops it:
+
+<table>
+<tr>
+<td align="center"><b>No correction &nbsp;(λ = 0)</b></td>
+<td align="center"><b>OT-corrected &nbsp;(λ = 0.8)</b></td>
+</tr>
+<tr>
+<td><img src="Imgs/celeba_baseline_samples_0_49.gif" width="360" alt="CelebA collapse, uncorrected"></td>
+<td><img src="Imgs/celeba_ot_08_samples_raw_0_49.gif" width="360" alt="CelebA OT-corrected"></td>
+</tr>
+</table>
+
+*Both panels show what each generation's model generates from its own prior (for the corrected run, samples taken **before** correction is applied — so this is a like-for-like comparison of the trained models, not of their corrected outputs). Left: faces blur together by generation 20 and flatten into a single featureless prototype by generation 30. Right: varied, recognisable faces through all 50 generations.*
+
+> This is also the clearest illustration of a metric caveat. CelebA drift is measured in a coarse pixel-pooling feature space that discards exactly the high-frequency detail a VAE loses first, so the Wasserstein numbers **understate** the CelebA collapse relative to what the samples show.
+
 ---
 
 ## Repository structure
