@@ -1,6 +1,6 @@
 # Model Collapse & Optimal-Transport Correction
 
-Generative models increasingly train on data produced by earlier generative models. When that loop closes on itself — a model trained on the previous model's output, repeated — the distribution drifts, the tails vanish, and samples decay into a few blurry prototypes. This is **model collapse**.
+Generative models increasingly train on data produced by earlier generative models. When that loop closes on itself, i.e., a model trained on the previous model's output, the distribution drifts, the tails vanish, and samples decay into a few blurry modes. This is **model collapse**.
 
 This repository studies collapse in a **self-consuming Variational Autoencoder (VAE)** loop and implements a **batch optimal-transport (OT) corrector** that arrests it by transporting each generation's latents back onto a fixed reference of real data before the next model trains.
 
@@ -11,7 +11,7 @@ This repository studies collapse in a **self-consuming Variational Autoencoder (
 <table>
 <tr>
 <td align="center"><b>No correction &nbsp;(λ = 0)</b></td>
-<td align="center"><b>OT-corrected &nbsp;(λ = 1.0)</b></td>
+<td align="center"><b>Fully OT-corrected &nbsp;(λ = 1.0)</b></td>
 </tr>
 <tr>
 <td><img src="Imgs/vae_mnist_samples_0_49.gif" width="340" alt="baseline collapse"></td>
@@ -25,11 +25,9 @@ This repository studies collapse in a **self-consuming Variational Autoencoder (
 
 ## Key findings
 
-- **Uncorrected loops collapse fast.** With no correction (λ = 0) the MNIST VAE loses almost all sample diversity within ~25 generations — Wasserstein-drift and FID blow up, pixel-diversity flatlines near zero.
+- **Uncorrected loops collapse fast.** With no correction (λ = 0) the MNIST VAE loses almost all sample diversity within ~25 generations. Wasserstein-drift and FID blow up, pixel-diversity flatlines near zero.
 - **A small correction is enough.** Any λ > 0 arrests the collapse; even λ = 0.2 keeps drift, FID, diversity and reconstruction error near their generation-0 values (see the λ sweep below).
-- **Coverage, not anchor count, is the active ingredient.** OT's marginal constraint forces *every* real anchor to receive mass, so the corrected set cannot pile onto a few modes — unlike nearest-neighbour projection, which mode-collapses. More anchors help but saturate around ~1,000.
-- **It scales.** Minibatch-OT keeps *exact* Earth Mover's Distance tractable against anchor pools of up to **60,000** samples at a near-constant **~2 s / generation**, independent of pool size.
-- **It generalizes** across MNIST, Fashion-MNIST, and 64×64 CelebA faces.
+- Minibatch-OT keeps exact Earth Mover's Distance tractable against anchor pools of up to 60,000 samples at a near-constant ~2 s / generation, independent of pool size.
 
 ---
 
@@ -60,9 +58,7 @@ where `z` is the synthetic latent (re-encoded by the frozen encoder), `T(z)` is 
 
 <img src="Report/self_consuming.png" width="720" alt="self-consuming loop with OT correction">
 
-**Minibatch-OT.** Exact OT against tens of thousands of anchors is intractable, so for each source chunk the solver draws a fresh random `K`-subset of the anchor pool and transports onto that — resampled per chunk so the whole pool is covered over the run while every solve stays small. Cost tracks `K`, not the pool size. Both exact EMD and entropic **Sinkhorn** couplings are supported.
-
-> A formal, publication-quality TikZ version of this pipeline lives in [`Report/ot_pipeline.tex`](Report/ot_pipeline.tex).
+**Minibatch-OT.** Exact OT against tens of thousands of anchors is intractable, so for each source chunk the solver draws a fresh random `K`-subset of the anchor pool and transports onto that. Resampled per chunk so the whole pool is covered over the run while every solve stays small. Cost tracks `K`, not the pool size. Both exact EMD and entropic **Sinkhorn** couplings are supported.
 
 ---
 
@@ -76,13 +72,13 @@ The uncorrected run (dark purple, λ = 0) collapses on every metric; **any** λ 
 
 ### Anchor-pool size sweep — λ = 0.8
 
-More anchors reduce drift and improve fidelity, but the benefit **saturates around ~1,000** anchors — evidence that the *coverage constraint*, not raw anchor count, is what prevents collapse.
+More anchors reduce drift and improve fidelity, but the benefit **saturates around ~1,000** anchors, which is evidence that the *coverage constraint*, not raw anchor count, is what prevents collapse.
 
 <img src="Imgs/exp_anch.png" width="820" alt="anchor-count sweep">
 
 ### Baseline vs. corrected (λ = 1.0)
 
-The baseline's sample diversity decays to zero; the corrected loop holds a stable floor. Note the honest trade-off in the right panel: a full λ = 1.0 snap fixes diversity but saturates reconstruction error — which is exactly why the intermediate λ above is preferable.
+The baseline's sample diversity decays to zero, and the corrected loop holds a stable floor. Note the trade-off in the right panel: a full λ = 1.0 snap fixes diversity but saturates reconstruction error. This is why some intermediate λ above is preferable.
 
 <img src="runs/baseline_vs_corrected.png" width="720" alt="baseline vs corrected">
 
