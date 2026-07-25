@@ -107,10 +107,6 @@ Run the loop for 50 generations and the same collapse appears — and the same c
 </tr>
 </table>
 
-*Both panels show what each generation's model generates from its own prior (for the corrected run, samples taken **before** correction is applied — so this is a like-for-like comparison of the trained models, not of their corrected outputs). Left: faces blur together by generation 20 and flatten into a single featureless prototype by generation 30. Right: varied, recognisable faces through all 50 generations.*
-
-> This is also the clearest illustration of a metric caveat. CelebA drift is measured in a coarse pixel-pooling feature space that discards exactly the high-frequency detail a VAE loses first, so the Wasserstein numbers **understate** the CelebA collapse relative to what the samples show.
-
 ---
 
 ## Repository structure
