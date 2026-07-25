@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
+import math
 import torchvision
 from pathlib import Path
 from multiprocessing import freeze_support
@@ -41,6 +42,7 @@ class Encoder(nn.Module):
         self.training = True
 
     def forward(self, x):
+        x = x.view(x.size(0), -1)  # accept (N,C,H,W) or already-flat input
         x = self.LeakyReLU(self.fc_input(x))
         x = self.LeakyReLU(self.fc_input2(x))
         x = self.LeakyReLU(self.fc_input3(x))
@@ -65,7 +67,52 @@ class Decoder(nn.Module):
         h = self.LeakyReLU(self.fc_hidden3(h))
         x_hat = self.Sigmoid(self.fc_output(h))
         return x_hat.reshape(-1, 1, 28, 28)
-    
+
+
+# Convolutional Gaussian Encoder & Decoder (for RGB / larger images, e.g. CelebA).
+# Same (mean, log_var) / (N,C,S,S) interface as the MLP pair, so Model, loss, and
+# the OT corrector work with either. S must be a power of 2 >= 8.
+
+class ConvEncoder(nn.Module):
+    def __init__(self, num_channels, image_size, latent_dim, base=64):
+        super(ConvEncoder, self).__init__()
+        self.num_channels, self.image_size = num_channels, image_size
+        n = int(round(math.log2(image_size // 4)))          # stride-2 stages down to 4x4
+        chans = [num_channels] + [base * (2 ** i) for i in range(n)]
+        layers = []
+        for i in range(n):
+            layers += [nn.Conv2d(chans[i], chans[i + 1], 4, 2, 1), nn.LeakyReLU(0.2, inplace=True)]
+        self.conv = nn.Sequential(*layers)
+        feat = chans[-1] * 4 * 4
+        self.fc_mean = nn.Linear(feat, latent_dim)
+        self.fc_var = nn.Linear(feat, latent_dim)
+
+    def forward(self, x):
+        if x.dim() == 2:                                    # accept flattened input too
+            x = x.view(-1, self.num_channels, self.image_size, self.image_size)
+        h = self.conv(x).flatten(1)
+        return self.fc_mean(h), self.fc_var(h)
+
+
+class ConvDecoder(nn.Module):
+    def __init__(self, num_channels, image_size, latent_dim, base=64):
+        super(ConvDecoder, self).__init__()
+        n = int(round(math.log2(image_size // 4)))
+        chans = [base * (2 ** (n - 1 - i)) for i in range(n)]
+        self.start_ch = chans[0]
+        self.fc = nn.Linear(latent_dim, chans[0] * 4 * 4)
+        layers, prev = [], chans[0]
+        for i in range(1, n):
+            layers += [nn.ConvTranspose2d(prev, chans[i], 4, 2, 1), nn.LeakyReLU(0.2, inplace=True)]
+            prev = chans[i]
+        layers += [nn.ConvTranspose2d(prev, num_channels, 4, 2, 1), nn.Sigmoid()]
+        self.deconv = nn.Sequential(*layers)
+
+    def forward(self, z):
+        h = self.fc(z).view(-1, self.start_ch, 4, 4)
+        return self.deconv(h)
+
+
 class Model(nn.Module):
     def __init__(self, encoder, decoder):
         super(Model, self).__init__()
@@ -120,13 +167,13 @@ def load_checkpoint(path: Path, device: torch.device) -> Model:
 def main() -> None:
     kwargs = {'num_workers': 4, 'pin_memory': (device.type == 'cuda')}
 
-    train_dataset = torchvision.datasets.MNIST(
+    train_dataset = torchvision.datasets.FashionMNIST(
         root=str(data_root),
         train=True,
         download=True,
         transform=mnist_transform,
     )
-    test_dataset = torchvision.datasets.MNIST(
+    test_dataset = torchvision.datasets.FashionMNIST(
         root=str(data_root),
         train=False,
         download=True,

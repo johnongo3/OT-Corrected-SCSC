@@ -1,0 +1,49 @@
+% =====================================================================
+%  Drop-in figure for the report.  Two ways to include ot_pipeline.tex:
+%
+%  (A) RECOMMENDED -- reuse ot_pipeline.tex's own preamble, no copying.
+%      In your main preamble:   \usepackage{standalone}
+%      Then use the figure below as-is (\includestandalone).
+%
+%  (B) INLINE -- if you would rather paste the tikzpicture directly, copy
+%      the body of ot_pipeline.tex (everything between \begin{tikzpicture}
+%      and \end{tikzpicture}) in place of \includestandalone, and move these
+%      lines into your main preamble:
+%          \usepackage{amsmath,amssymb,tikz}
+%          \usetikzlibrary{positioning,arrows.meta,calc,fit,backgrounds,shapes.geometric}
+%          \DeclareMathOperator*{\argmin}{arg\,min}
+%          \definecolor{steel}{RGB}{62,104,150} ... (the five \definecolor lines)
+%
+%  Use figure* (not figure) so it spans both columns in a two-column layout.
+% =====================================================================
+\begin{figure*}[t]
+  \centering
+  \resizebox{\textwidth}{!}{\includestandalone{ot_pipeline}}
+  \caption{%
+    \textbf{Minibatch optimal-transport collapse correction within one
+    self-consuming generation.}
+    A generation-$k$ VAE samples from its prior and decodes ($\mathrm{Dec}_k$);
+    those images are re-embedded by the \emph{frozen} generation-0 encoder
+    ($\mathrm{Enc}_0$) into source latents $z_i=\mu_0(x_i)$, corrected by the
+    operator $\mathcal T_\lambda$, decoded by the frozen $\mathrm{Dec}_0$, and used
+    to train generation $k{+}1$. All transport occurs in the fixed reference
+    latent space; the generation-$k$ model's own latent space is never modified.
+    The operator has three steps.
+    \emph{(a)} For each source chunk, a fresh random $K$-subset
+    $B$ of the anchor pool is drawn and an exact optimal-transport plan
+    $P^\star$ is solved between the uniform empirical measures $\hat\mu_n$ (sources)
+    and $\hat\nu_K$ (anchors); the column marginal
+    $P^{\!\top}\mathbf 1=\tfrac1K\mathbf 1$ forces every drawn anchor to receive
+    mass, which nearest-neighbour projection does not.
+    \emph{(b)} Each latent is mapped to the barycentric projection $T(z_i)$, a
+    convex combination of the anchors it transports to (illustrated with the
+    plan's own weights $0.67,0.33$), not a snap to the nearest anchor.
+    \emph{(c)} The correction is applied as a partial move
+    $z_i'=(1-\lambda)z_i+\lambda\,T(z_i)$, so $\lambda$ tunes the pull toward the
+    reference between the identity ($\lambda{=}0$) and full projection
+    ($\lambda{=}1$).
+    Anchors $a_j=\mathrm{Enc}_0(\text{real})$ are class-stratified and fixed for
+    the whole run; subset resampling per chunk keeps each exact solve tractable
+    while covering the pool in aggregate.}
+  \label{fig:ot-pipeline}
+\end{figure*}

@@ -1,0 +1,619 @@
+{
+  "config": {
+    "generations": 60,
+    "epochs": 20,
+    "latent_dim": 96,
+    "num_synth": 3000,
+    "batch_size": 128,
+    "lr": 0.001,
+    "real_fraction": 0.0,
+    "correction_strength": 0.5,
+    "n_anchors": 512,
+    "ot_reg": 0.05,
+    "output_root": "runs/ot_corrected",
+    "seed": 42,
+    "start_generation": 0
+  },
+  "rows": [
+    {
+      "generation": 0,
+      "source": "real",
+      "test_recon": 0.086813,
+      "sample_pixel_std": 0.209932,
+      "mean_pairwise_l2": 8.572001,
+      "latent_std_mean": 0.0827,
+      "raw_pixel_std": 0.263516,
+      "raw_pairwise_l2": 10.926669
+    },
+    {
+      "generation": 1,
+      "source": "gen0 samples",
+      "test_recon": 0.117188,
+      "sample_pixel_std": 0.176732,
+      "mean_pairwise_l2": 7.555387,
+      "latent_std_mean": 0.032688,
+      "raw_pixel_std": 0.199816,
+      "raw_pairwise_l2": 8.776606
+    },
+    {
+      "generation": 2,
+      "source": "gen1 samples",
+      "test_recon": 0.104837,
+      "sample_pixel_std": 0.167795,
+      "mean_pairwise_l2": 7.111924,
+      "latent_std_mean": 0.030026,
+      "raw_pixel_std": 0.194974,
+      "raw_pairwise_l2": 8.154128
+    },
+    {
+      "generation": 3,
+      "source": "gen2 samples",
+      "test_recon": 0.262903,
+      "sample_pixel_std": 0.054131,
+      "mean_pairwise_l2": 2.310641,
+      "latent_std_mean": 0.180882,
+      "raw_pixel_std": 0.007718,
+      "raw_pairwise_l2": 0.149484
+    },
+    {
+      "generation": 4,
+      "source": "gen3 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.050334,
+      "mean_pairwise_l2": 2.217077,
+      "latent_std_mean": 0.285927,
+      "raw_pixel_std": 0.001692,
+      "raw_pairwise_l2": 0.010026
+    },
+    {
+      "generation": 5,
+      "source": "gen4 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049661,
+      "mean_pairwise_l2": 2.196407,
+      "latent_std_mean": 0.386151,
+      "raw_pixel_std": 0.000254,
+      "raw_pairwise_l2": 0.000835
+    },
+    {
+      "generation": 6,
+      "source": "gen5 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049955,
+      "mean_pairwise_l2": 2.209119,
+      "latent_std_mean": 0.299894,
+      "raw_pixel_std": 0.000774,
+      "raw_pairwise_l2": 0.005047
+    },
+    {
+      "generation": 7,
+      "source": "gen6 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049927,
+      "mean_pairwise_l2": 2.203759,
+      "latent_std_mean": 0.294852,
+      "raw_pixel_std": 0.001997,
+      "raw_pairwise_l2": 0.012178
+    },
+    {
+      "generation": 8,
+      "source": "gen7 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049652,
+      "mean_pairwise_l2": 2.197206,
+      "latent_std_mean": 0.191498,
+      "raw_pixel_std": 0.000797,
+      "raw_pairwise_l2": 0.002763
+    },
+    {
+      "generation": 9,
+      "source": "gen8 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049761,
+      "mean_pairwise_l2": 2.200905,
+      "latent_std_mean": 0.291971,
+      "raw_pixel_std": 0.000795,
+      "raw_pairwise_l2": 0.004481
+    },
+    {
+      "generation": 10,
+      "source": "gen9 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049909,
+      "mean_pairwise_l2": 2.204492,
+      "latent_std_mean": 0.302,
+      "raw_pixel_std": 0.000712,
+      "raw_pairwise_l2": 0.002514
+    },
+    {
+      "generation": 11,
+      "source": "gen10 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049602,
+      "mean_pairwise_l2": 2.19045,
+      "latent_std_mean": 0.397137,
+      "raw_pixel_std": 0.000957,
+      "raw_pairwise_l2": 0.002857
+    },
+    {
+      "generation": 12,
+      "source": "gen11 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049901,
+      "mean_pairwise_l2": 2.196383,
+      "latent_std_mean": 0.429563,
+      "raw_pixel_std": 0.001013,
+      "raw_pairwise_l2": 0.002944
+    },
+    {
+      "generation": 13,
+      "source": "gen12 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049707,
+      "mean_pairwise_l2": 2.198889,
+      "latent_std_mean": 0.272438,
+      "raw_pixel_std": 0.000462,
+      "raw_pairwise_l2": 0.002108
+    },
+    {
+      "generation": 14,
+      "source": "gen13 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049667,
+      "mean_pairwise_l2": 2.197283,
+      "latent_std_mean": 0.198487,
+      "raw_pixel_std": 0.000964,
+      "raw_pairwise_l2": 0.003759
+    },
+    {
+      "generation": 15,
+      "source": "gen14 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.050361,
+      "mean_pairwise_l2": 2.210598,
+      "latent_std_mean": 0.314121,
+      "raw_pixel_std": 0.001729,
+      "raw_pairwise_l2": 0.0073
+    },
+    {
+      "generation": 16,
+      "source": "gen15 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049808,
+      "mean_pairwise_l2": 2.202796,
+      "latent_std_mean": 0.344393,
+      "raw_pixel_std": 0.002292,
+      "raw_pairwise_l2": 0.012111
+    },
+    {
+      "generation": 17,
+      "source": "gen16 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049747,
+      "mean_pairwise_l2": 2.200272,
+      "latent_std_mean": 0.32553,
+      "raw_pixel_std": 0.000459,
+      "raw_pairwise_l2": 0.00271
+    },
+    {
+      "generation": 18,
+      "source": "gen17 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049713,
+      "mean_pairwise_l2": 2.197909,
+      "latent_std_mean": 0.295589,
+      "raw_pixel_std": 0.000556,
+      "raw_pairwise_l2": 0.00219
+    },
+    {
+      "generation": 19,
+      "source": "gen18 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049916,
+      "mean_pairwise_l2": 2.20477,
+      "latent_std_mean": 0.331673,
+      "raw_pixel_std": 0.000676,
+      "raw_pairwise_l2": 0.002602
+    },
+    {
+      "generation": 20,
+      "source": "gen19 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049805,
+      "mean_pairwise_l2": 2.203016,
+      "latent_std_mean": 0.272547,
+      "raw_pixel_std": 0.000636,
+      "raw_pairwise_l2": 0.003625
+    },
+    {
+      "generation": 21,
+      "source": "gen20 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049673,
+      "mean_pairwise_l2": 2.193567,
+      "latent_std_mean": 0.621792,
+      "raw_pixel_std": 0.000186,
+      "raw_pairwise_l2": 0.000716
+    },
+    {
+      "generation": 22,
+      "source": "gen21 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049647,
+      "mean_pairwise_l2": 2.196658,
+      "latent_std_mean": 0.589479,
+      "raw_pixel_std": 0.000654,
+      "raw_pairwise_l2": 0.002488
+    },
+    {
+      "generation": 23,
+      "source": "gen22 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049628,
+      "mean_pairwise_l2": 2.189817,
+      "latent_std_mean": 0.373144,
+      "raw_pixel_std": 0.000242,
+      "raw_pairwise_l2": 0.00113
+    },
+    {
+      "generation": 24,
+      "source": "gen23 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049745,
+      "mean_pairwise_l2": 2.199311,
+      "latent_std_mean": 0.201844,
+      "raw_pixel_std": 0.000232,
+      "raw_pairwise_l2": 0.001067
+    },
+    {
+      "generation": 25,
+      "source": "gen24 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049847,
+      "mean_pairwise_l2": 2.202391,
+      "latent_std_mean": 0.277703,
+      "raw_pixel_std": 0.000651,
+      "raw_pairwise_l2": 0.002403
+    },
+    {
+      "generation": 26,
+      "source": "gen25 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049601,
+      "mean_pairwise_l2": 2.194217,
+      "latent_std_mean": 0.303323,
+      "raw_pixel_std": 0.001152,
+      "raw_pairwise_l2": 0.004332
+    },
+    {
+      "generation": 27,
+      "source": "gen26 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049648,
+      "mean_pairwise_l2": 2.197198,
+      "latent_std_mean": 0.274461,
+      "raw_pixel_std": 0.000375,
+      "raw_pairwise_l2": 0.001917
+    },
+    {
+      "generation": 28,
+      "source": "gen27 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049657,
+      "mean_pairwise_l2": 2.193429,
+      "latent_std_mean": 0.327763,
+      "raw_pixel_std": 0.000761,
+      "raw_pairwise_l2": 0.002892
+    },
+    {
+      "generation": 29,
+      "source": "gen28 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.04967,
+      "mean_pairwise_l2": 2.196797,
+      "latent_std_mean": 0.261474,
+      "raw_pixel_std": 0.000621,
+      "raw_pairwise_l2": 0.002853
+    },
+    {
+      "generation": 30,
+      "source": "gen29 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049826,
+      "mean_pairwise_l2": 2.205533,
+      "latent_std_mean": 0.301641,
+      "raw_pixel_std": 0.000487,
+      "raw_pairwise_l2": 0.003232
+    },
+    {
+      "generation": 31,
+      "source": "gen30 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049737,
+      "mean_pairwise_l2": 2.201586,
+      "latent_std_mean": 0.317979,
+      "raw_pixel_std": 0.001151,
+      "raw_pairwise_l2": 0.005798
+    },
+    {
+      "generation": 32,
+      "source": "gen31 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049665,
+      "mean_pairwise_l2": 2.196661,
+      "latent_std_mean": 0.225991,
+      "raw_pixel_std": 0.001194,
+      "raw_pairwise_l2": 0.005512
+    },
+    {
+      "generation": 33,
+      "source": "gen32 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049831,
+      "mean_pairwise_l2": 2.199501,
+      "latent_std_mean": 0.19627,
+      "raw_pixel_std": 0.000827,
+      "raw_pairwise_l2": 0.004167
+    },
+    {
+      "generation": 34,
+      "source": "gen33 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049975,
+      "mean_pairwise_l2": 2.204996,
+      "latent_std_mean": 0.360905,
+      "raw_pixel_std": 0.002097,
+      "raw_pairwise_l2": 0.011943
+    },
+    {
+      "generation": 35,
+      "source": "gen34 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049862,
+      "mean_pairwise_l2": 2.204936,
+      "latent_std_mean": 0.684938,
+      "raw_pixel_std": 0.001083,
+      "raw_pairwise_l2": 0.005602
+    },
+    {
+      "generation": 36,
+      "source": "gen35 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.04974,
+      "mean_pairwise_l2": 2.199561,
+      "latent_std_mean": 0.736916,
+      "raw_pixel_std": 1.8e-05,
+      "raw_pairwise_l2": 0.000109
+    },
+    {
+      "generation": 37,
+      "source": "gen36 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049783,
+      "mean_pairwise_l2": 2.198164,
+      "latent_std_mean": 0.281956,
+      "raw_pixel_std": 0.000617,
+      "raw_pairwise_l2": 0.002484
+    },
+    {
+      "generation": 38,
+      "source": "gen37 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.0497,
+      "mean_pairwise_l2": 2.19888,
+      "latent_std_mean": 0.241795,
+      "raw_pixel_std": 0.000623,
+      "raw_pairwise_l2": 0.003064
+    },
+    {
+      "generation": 39,
+      "source": "gen38 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.04974,
+      "mean_pairwise_l2": 2.201951,
+      "latent_std_mean": 0.207427,
+      "raw_pixel_std": 0.001227,
+      "raw_pairwise_l2": 0.005885
+    },
+    {
+      "generation": 40,
+      "source": "gen39 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049997,
+      "mean_pairwise_l2": 2.203405,
+      "latent_std_mean": 0.287577,
+      "raw_pixel_std": 0.001348,
+      "raw_pairwise_l2": 0.00675
+    },
+    {
+      "generation": 41,
+      "source": "gen40 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049943,
+      "mean_pairwise_l2": 2.206745,
+      "latent_std_mean": 0.225662,
+      "raw_pixel_std": 0.000914,
+      "raw_pairwise_l2": 0.005154
+    },
+    {
+      "generation": 42,
+      "source": "gen41 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.04957,
+      "mean_pairwise_l2": 2.188163,
+      "latent_std_mean": 0.318252,
+      "raw_pixel_std": 0.001091,
+      "raw_pairwise_l2": 0.003591
+    },
+    {
+      "generation": 43,
+      "source": "gen42 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049871,
+      "mean_pairwise_l2": 2.203648,
+      "latent_std_mean": 0.198012,
+      "raw_pixel_std": 0.000855,
+      "raw_pairwise_l2": 0.003168
+    },
+    {
+      "generation": 44,
+      "source": "gen43 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.050009,
+      "mean_pairwise_l2": 2.205525,
+      "latent_std_mean": 0.261924,
+      "raw_pixel_std": 0.0009,
+      "raw_pairwise_l2": 0.003804
+    },
+    {
+      "generation": 45,
+      "source": "gen44 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049674,
+      "mean_pairwise_l2": 2.197527,
+      "latent_std_mean": 0.373353,
+      "raw_pixel_std": 0.000242,
+      "raw_pairwise_l2": 0.000971
+    },
+    {
+      "generation": 46,
+      "source": "gen45 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049665,
+      "mean_pairwise_l2": 2.197543,
+      "latent_std_mean": 0.286641,
+      "raw_pixel_std": 0.001113,
+      "raw_pairwise_l2": 0.005326
+    },
+    {
+      "generation": 47,
+      "source": "gen46 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.050372,
+      "mean_pairwise_l2": 2.218975,
+      "latent_std_mean": 0.29188,
+      "raw_pixel_std": 0.001438,
+      "raw_pairwise_l2": 0.008156
+    },
+    {
+      "generation": 48,
+      "source": "gen47 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049648,
+      "mean_pairwise_l2": 2.193055,
+      "latent_std_mean": 0.41432,
+      "raw_pixel_std": 0.000135,
+      "raw_pairwise_l2": 0.000569
+    },
+    {
+      "generation": 49,
+      "source": "gen48 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049778,
+      "mean_pairwise_l2": 2.202204,
+      "latent_std_mean": 0.351299,
+      "raw_pixel_std": 0.0002,
+      "raw_pairwise_l2": 0.001157
+    },
+    {
+      "generation": 50,
+      "source": "gen49 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.050601,
+      "mean_pairwise_l2": 2.217029,
+      "latent_std_mean": 0.362103,
+      "raw_pixel_std": 0.00193,
+      "raw_pairwise_l2": 0.009159
+    },
+    {
+      "generation": 51,
+      "source": "gen50 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.04964,
+      "mean_pairwise_l2": 2.191556,
+      "latent_std_mean": 0.252791,
+      "raw_pixel_std": 0.000449,
+      "raw_pairwise_l2": 0.001659
+    },
+    {
+      "generation": 52,
+      "source": "gen51 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.050123,
+      "mean_pairwise_l2": 2.213451,
+      "latent_std_mean": 0.277952,
+      "raw_pixel_std": 0.000982,
+      "raw_pairwise_l2": 0.005512
+    },
+    {
+      "generation": 53,
+      "source": "gen52 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.050354,
+      "mean_pairwise_l2": 2.213116,
+      "latent_std_mean": 0.280195,
+      "raw_pixel_std": 0.00145,
+      "raw_pairwise_l2": 0.006665
+    },
+    {
+      "generation": 54,
+      "source": "gen53 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.050223,
+      "mean_pairwise_l2": 2.20864,
+      "latent_std_mean": 0.383209,
+      "raw_pixel_std": 0.001518,
+      "raw_pairwise_l2": 0.007351
+    },
+    {
+      "generation": 55,
+      "source": "gen54 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049648,
+      "mean_pairwise_l2": 2.193259,
+      "latent_std_mean": 0.328262,
+      "raw_pixel_std": 9.2e-05,
+      "raw_pairwise_l2": 0.000422
+    },
+    {
+      "generation": 56,
+      "source": "gen55 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.050528,
+      "mean_pairwise_l2": 2.218118,
+      "latent_std_mean": 0.214112,
+      "raw_pixel_std": 0.001893,
+      "raw_pairwise_l2": 0.010675
+    },
+    {
+      "generation": 57,
+      "source": "gen56 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049919,
+      "mean_pairwise_l2": 2.206279,
+      "latent_std_mean": 0.326388,
+      "raw_pixel_std": 0.000827,
+      "raw_pairwise_l2": 0.004433
+    },
+    {
+      "generation": 58,
+      "source": "gen57 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.050083,
+      "mean_pairwise_l2": 2.204401,
+      "latent_std_mean": 0.667469,
+      "raw_pixel_std": 0.001154,
+      "raw_pairwise_l2": 0.003633
+    },
+    {
+      "generation": 59,
+      "source": "gen58 samples",
+      "test_recon": 0.266762,
+      "sample_pixel_std": 0.049663,
+      "mean_pairwise_l2": 2.196992,
+      "latent_std_mean": 0.300851,
+      "raw_pixel_std": 0.001513,
+      "raw_pairwise_l2": 0.005207
+    }
+  ]
+}

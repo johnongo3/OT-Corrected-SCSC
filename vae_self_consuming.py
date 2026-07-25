@@ -63,10 +63,22 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from vae import Encoder, Decoder, Model, loss_function, x_dim, hidden_dim, latent_dim
-from ot_corrector import build_anchor_latents, ot_correct_images_lambda, _stratified_indices
+import glob
+from PIL import Image
+import torchvision.transforms as T
+
+from vae import (Encoder, Decoder, ConvEncoder, ConvDecoder, Model, loss_function,
+                 x_dim, hidden_dim, latent_dim)
+from ot_corrector import (build_anchor_latents, ot_correct_images_lambda, _stratified_indices,
+                          encode_all_latents, nn_correct_images, minibatch_ot_correct_images)
+from ot import sliced_wasserstein_distance
 
 DATA_ROOT = "data"
+CELEBA_DIR = "dataset/img_align_celeba"
+
+# Dataset-dependent config, set by run() from --dataset. Defaults = MNIST (MLP VAE).
+DATASET = "mnist"
+LATENT = latent_dim          # 96 for MNIST MLP; 128 for the CelebA conv VAE
 
 
 def set_seed(seed: int) -> None:
@@ -77,18 +89,46 @@ def set_seed(seed: int) -> None:
 # ----------------------------------------------------------------------------
 # Data
 # ----------------------------------------------------------------------------
-def load_mnist():
+# 28x28 single-channel datasets: identical shape, so they share the MLP VAE, the
+# FIDNet architecture and all metrics -- only the pixels and the 10 class meanings
+# differ. Each still needs its OWN trained FID net (see get_fid_net).
+GRAY_DATASETS = {
+    "mnist": datasets.MNIST,
+    "fashion_mnist": datasets.FashionMNIST,
+}
+
+
+def load_gray(name):
     """Return (train_images, test_images) as float [0,1] tensors, shape (N,1,28,28)."""
-    train = datasets.MNIST(root=DATA_ROOT, train=True, download=True)
-    test = datasets.MNIST(root=DATA_ROOT, train=False, download=True)
+    cls = GRAY_DATASETS[name]
+    train = cls(root=DATA_ROOT, train=True, download=True)
+    test = cls(root=DATA_ROOT, train=False, download=True)
     train_images = train.data.float().div(255.0).unsqueeze(1)
     test_images = test.data.float().div(255.0).unsqueeze(1)
     return train_images, test_images
 
 
-def load_train_labels():
-    """MNIST train targets (for class-stratified anchor selection)."""
-    return datasets.MNIST(root=DATA_ROOT, train=True, download=True).targets
+def load_mnist():
+    """MNIST (train_images, test_images); kept for vae_digit_generations.py."""
+    return load_gray("mnist")
+
+
+def load_train_labels(name="mnist"):
+    """Train targets (for class-stratified anchor selection)."""
+    return GRAY_DATASETS[name](root=DATA_ROOT, train=True, download=True).targets
+
+
+def load_celeba(n_train, n_test=2000, image_size=64, data_dir=CELEBA_DIR):
+    """Load n_train + n_test aligned CelebA faces as float [0,1] (N,3,image_size^2).
+    CenterCrop(148)->Resize->ToTensor; returns (train_images, test_images)."""
+    tf = T.Compose([T.CenterCrop(148), T.Resize(image_size), T.ToTensor()])
+    paths = sorted(glob.glob(f"{data_dir}/*.jpg"))
+    need = n_train + n_test
+    if len(paths) < need:
+        raise RuntimeError(f"CelebA: need {need} images, found {len(paths)} in {data_dir}")
+    print(f"Loading {need} CelebA faces from {data_dir} (this can take a minute)...")
+    imgs = torch.stack([tf(Image.open(p).convert("RGB")) for p in paths[:need]])
+    return imgs[:n_train], imgs[n_train:need]
 
 
 def as_loader(images, batch_size, shuffle, device):
@@ -102,8 +142,12 @@ def as_loader(images, batch_size, shuffle, device):
 # Train / sample / encode  (reuses vae.py's Encoder/Decoder/Model/loss)
 # ----------------------------------------------------------------------------
 def build_vae(device):
-    enc = Encoder(input_dim=x_dim, hidden_dim=hidden_dim, latent_dim=latent_dim)
-    dec = Decoder(latent_dim=latent_dim, hidden_dim=hidden_dim, output_dim=x_dim)
+    if DATASET == "celeba":
+        enc = ConvEncoder(num_channels=3, image_size=64, latent_dim=LATENT, base=64)
+        dec = ConvDecoder(num_channels=3, image_size=64, latent_dim=LATENT, base=64)
+    else:
+        enc = Encoder(input_dim=x_dim, hidden_dim=hidden_dim, latent_dim=latent_dim)
+        dec = Decoder(latent_dim=latent_dim, hidden_dim=hidden_dim, output_dim=x_dim)
     return Model(encoder=enc, decoder=dec).to(device)
 
 
@@ -117,7 +161,7 @@ def train_vae(images, epochs, lr, batch_size, device, seed):
     model.train()
     for _ in range(epochs):
         for x, _ in loader:
-            x = x.view(x.size(0), x_dim).to(device)
+            x = x.to(device)
             optimizer.zero_grad()
             x_hat, mean, log_var = model(x)
             loss = loss_function(x, x_hat, mean, log_var)
@@ -130,11 +174,11 @@ def train_vae(images, epochs, lr, batch_size, device, seed):
 
 @torch.no_grad()
 def sample_images(model, num, device, bs=512):
-    """Decode `num` prior samples z ~ N(0, I) into [0,1] images (N,1,28,28)."""
+    """Decode `num` prior samples z ~ N(0, I) into [0,1] images (N,C,H,W)."""
     out = []
     for i in range(0, num, bs):
         n = min(bs, num - i)
-        z = torch.randn(n, latent_dim, device=device)
+        z = torch.randn(n, LATENT, device=device)
         out.append(model.decoder(z).clamp(0, 1).cpu())
     return torch.cat(out)
 
@@ -145,7 +189,7 @@ def posterior_std_mean(model, images, device, bs=512):
     for how much of the latent space the aggregated posterior still spans."""
     means = []
     for i in range(0, len(images), bs):
-        x = images[i:i + bs].view(-1, x_dim).to(device)
+        x = images[i:i + bs].to(device)
         mu, _ = model.encoder(x)
         means.append(mu.cpu())
     means = torch.cat(means)
@@ -157,9 +201,10 @@ def test_bce(model, test_loader, device):
     """Mean per-image reconstruction BCE on the real test set (drift proxy)."""
     total, n = 0.0, 0
     for x, _ in test_loader:
-        x = x.view(x.size(0), x_dim).to(device)
+        x = x.to(device)
         x_hat, _, _ = model(x)
-        bce = F.binary_cross_entropy(x_hat.view(x.size(0), -1), x, reduction="sum")
+        bce = F.binary_cross_entropy(x_hat.reshape(x.size(0), -1),
+                                     x.reshape(x.size(0), -1), reduction="sum")
         total += bce.item()
         n += x.size(0)
     return total / n
@@ -202,15 +247,21 @@ class FIDNet(nn.Module):
         return self.fc2(self.features(x))
 
 
-def get_fid_net(train_images, device, cache=Path("outputs") / "mnist_fid_cnn.pt", epochs=3):
-    """Load or train the FID feature extractor on real MNIST."""
+def get_fid_net(train_images, device, name="mnist", cache=None, epochs=3):
+    """Load or train the FID feature extractor on the real 28x28 dataset.
+
+    Each dataset gets its OWN net and cache file: a CNN trained to separate digits
+    produces meaningless features for clothing, which would make the FID and the
+    Wasserstein-from-gen0 columns unreadable.
+    """
+    cache = Path(cache) if cache else Path("outputs") / f"{name}_fid_cnn.pt"
     net = FIDNet().to(device)
     if cache.exists():
         net.load_state_dict(torch.load(cache, map_location=device))
         net.eval()
         return net
-    print("Training FID feature CNN on real MNIST (one-time)...")
-    train = datasets.MNIST(root=DATA_ROOT, train=True, download=True)
+    print(f"Training FID feature CNN on real {name} (one-time)...")
+    train = GRAY_DATASETS[name](root=DATA_ROOT, train=True, download=True)
     x = train.data.float().div(255.0).unsqueeze(1)
     y = train.targets
     loader = DataLoader(TensorDataset(x, y), batch_size=256, shuffle=True)
@@ -226,6 +277,29 @@ def get_fid_net(train_images, device, cache=Path("outputs") / "mnist_fid_cnn.pt"
     cache.parent.mkdir(parents=True, exist_ok=True)
     torch.save(net.state_dict(), cache)
     return net
+
+
+class PixelFeatureNet(nn.Module):
+    """Self-contained pixel feature space for FID/Wasserstein on RGB images: average-
+    pool to 16x16 and flatten (768-d). No training or downloads -- it uses the same
+    Frechet / sliced-Wasserstein machinery as the MNIST CNN features, just on coarse
+    pixels, so the Wasserstein-from-gen0 and FID columns line up with MNIST in kind.
+    Captures distributional drift/collapse (it is not a perceptual/Inception FID)."""
+
+    def __init__(self, size=16):
+        super().__init__()
+        self.pool = nn.AdaptiveAvgPool2d(size)
+
+    def features(self, x):
+        return self.pool(x).flatten(1)
+
+
+def get_feature_net(dataset, train_images, device):
+    """FID/Wasserstein feature extractor: a CNN trained on the 28x28 dataset itself,
+    or a self-contained downsampled-pixel space for CelebA faces."""
+    if dataset == "celeba":
+        return PixelFeatureNet().to(device).eval()
+    return get_fid_net(train_images, device, name=dataset)
 
 
 @torch.no_grad()
@@ -258,16 +332,26 @@ def frechet_distance(feat1, feat2, eps=1e-6):
 # Loop
 # ----------------------------------------------------------------------------
 def run(args):
+    global DATASET, LATENT
+    DATASET = args.dataset
+    LATENT = 128 if args.dataset == "celeba" else latent_dim
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     output_root = Path(args.output_root)
     output_root.mkdir(parents=True, exist_ok=True)
 
-    train_images, test_images = load_mnist()
-    train_labels = load_train_labels()
+    if args.dataset == "celeba":
+        # Real pool must be large enough for both the gen-0 subsample and the anchors.
+        pool_size = max(args.num_synth, args.n_anchors)
+        # >768 test faces so the 768-d pixel-feature FID covariance is full-rank.
+        train_images, test_images = load_celeba(pool_size, n_test=2000, data_dir=args.data_dir)
+        train_labels = torch.zeros(len(train_images), dtype=torch.long)  # no class labels
+    else:
+        train_images, test_images = load_gray(args.dataset)
+        train_labels = load_train_labels(args.dataset)
     test_loader = as_loader(test_images, args.batch_size, shuffle=False, device=device)
 
     # Fixed real reference for FID: the model's feature stats never move.
-    fid_net = get_fid_net(train_images, device)
+    fid_net = get_feature_net(args.dataset, train_images, device)
     real_feats = fid_features(fid_net, test_images, device)
 
     # Constant training-set size across generations so N doesn't confound collapse.
@@ -287,21 +371,28 @@ def run(args):
         anchor_idx = _stratified_indices(train_labels, args.n_anchors, gen_anchor)
         anchor_images = train_images[anchor_idx]
 
+    aug_mode = ("accumulate-all" if args.augment_real and args.accumulate
+                else "real+synth (1:1)" if args.augment_real else "off")
     print(f"Self-consuming VAE loop | {args.generations} generations | "
           f"{args.epochs} epochs each | latent={latent_dim} | N={n} | device={device}")
     print(f"real_fraction={args.real_fraction} (0 = pure synthetic replacement) | "
           f"correction_lambda={args.correction_lambda} (0 = off) | "
-          f"anchor_augment={args.anchor_augment}"
+          f"anchor_augment={args.anchor_augment} | augment_real={aug_mode} | "
+          f"full_anchors={args.full_anchors} | anchor_minibatch={args.anchor_minibatch}"
           + (f" ({len(anchor_images)} fixed real anchors retained)" if args.anchor_augment else "")
           + "\n")
 
     current_images = real_pool
     rows: list[dict] = []
+    synthetic_history: list[torch.Tensor] = []  # for --accumulate
 
     # OT correction: a frozen gen-0 VAE + fixed real anchors define a drift-free
     # reference. Frozen once at gen 0 (below) and reused every later generation.
+    # `anchor_bank` holds ALL real latents for --full-anchors (NN projection).
     frozen = None
     anchors = None
+    anchor_bank = None
+    gen0_feats = None  # FID features of gen-0 raw samples (Wasserstein-from-gen0 reference)
 
     for gen in range(args.generations):
         gen_dir = output_root / f"gen{gen}"
@@ -316,34 +407,71 @@ def run(args):
         raw_synthetic = sample_images(model, args.num_synth, device)
 
         # Freeze the gen-0 VAE + real anchors as the OT reference space (once).
+        # --full-anchors uses the ENTIRE real set as the anchor bank (NN projection);
+        # otherwise a fixed class-stratified set of n_anchors (batch-OT barycentric).
         if args.correction_lambda > 0 and frozen is None:
             frozen = build_vae(device)
             frozen.load_state_dict(model.state_dict())
             frozen.eval()
-            anchors = build_anchor_latents(frozen, train_images, train_labels,
-                                           args.n_anchors, device, seed=args.seed)
-            print(f"  Froze gen-{gen} VAE + {len(anchors)} anchors "
-                  f"(lambda={args.correction_lambda}, reg={args.ot_reg}).")
+            if args.anchor_minibatch > 0:
+                # Large anchor POOL; minibatch OT draws a random subset per chunk.
+                anchors = build_anchor_latents(frozen, train_images, train_labels,
+                                               args.n_anchors, device, seed=args.seed)
+                print(f"  Froze gen-{gen} VAE + anchor POOL ({len(anchors)}) | "
+                      f"minibatch-OT K={args.anchor_minibatch} "
+                      f"(lambda={args.correction_lambda}, reg={args.ot_reg}).")
+            elif args.full_anchors:
+                # NN anchor bank sized by n_anchors (class-stratified); all real if >= dataset.
+                if args.n_anchors >= len(train_images):
+                    bank_imgs = train_images
+                else:
+                    gen_a = torch.Generator().manual_seed(args.seed)
+                    bank_imgs = train_images[_stratified_indices(train_labels, args.n_anchors, gen_a)]
+                anchor_bank = encode_all_latents(frozen, bank_imgs, device)
+                print(f"  Froze gen-{gen} VAE + NN anchor bank "
+                      f"({len(anchor_bank)} real latents, lambda={args.correction_lambda}).")
+            else:
+                anchors = build_anchor_latents(frozen, train_images, train_labels,
+                                               args.n_anchors, device, seed=args.seed)
+                print(f"  Froze gen-{gen} VAE + {len(anchors)} anchors "
+                      f"(lambda={args.correction_lambda}, reg={args.ot_reg}).")
 
-        # Batch-OT correction BEFORE the next generation trains: pull the synthetic
-        # latents a proportion `lambda` toward the frozen anchor manifold, decode,
-        # and propagate the corrected set forward.
-        if args.correction_lambda > 0 and anchors is not None:
-            synthetic = ot_correct_images_lambda(frozen, raw_synthetic, anchors,
-                                                 args.correction_lambda, device, reg=args.ot_reg)
+        # Correction BEFORE the next generation trains: pull the synthetic latents a
+        # proportion `lambda` toward the frozen reference, decode, propagate forward.
+        if args.correction_lambda > 0 and frozen is not None:
+            if args.anchor_minibatch > 0:
+                synthetic = minibatch_ot_correct_images(
+                    frozen, raw_synthetic, anchors, args.correction_lambda,
+                    args.anchor_minibatch, device, reg=args.ot_reg, seed=args.seed + gen)
+            elif args.full_anchors:
+                synthetic = nn_correct_images(frozen, raw_synthetic, anchor_bank,
+                                              args.correction_lambda, device)
+            else:
+                synthetic = ot_correct_images_lambda(frozen, raw_synthetic, anchors,
+                                                     args.correction_lambda, device, reg=args.ot_reg)
             save_image(raw_synthetic[:64], gen_dir / "samples_raw.png", nrow=8)
         else:
             synthetic = raw_synthetic
 
         # Metrics against the fixed real reference (on the propagated/corrected set).
-        fid = frechet_distance(real_feats, fid_features(fid_net, synthetic, device))
+        synth_feats = fid_features(fid_net, synthetic, device)
+        fid = frechet_distance(real_feats, synth_feats)
         bce = test_bce(model, test_loader, device)
         pixel_std, mean_pairwise = diversity_metrics(synthetic)
         post_std = posterior_std_mean(model, current_images, device)
         # Raw (pre-correction) diversity + FID, for the corrected-vs-raw comparison.
         raw_pixel_std, raw_pairwise = diversity_metrics(raw_synthetic)
-        raw_fid = (frechet_distance(real_feats, fid_features(fid_net, raw_synthetic, device))
-                   if args.correction_lambda > 0 else fid)
+        if args.correction_lambda > 0:
+            raw_feats = fid_features(fid_net, raw_synthetic, device)
+            raw_fid = frechet_distance(real_feats, raw_feats)
+        else:
+            raw_feats, raw_fid = synth_feats, fid
+        # Wasserstein-from-gen0: sliced W2 of the model's RAW samples vs gen-0's, in
+        # FID-feature space (drift metric; 0 at gen 0, grows with collapse).
+        if gen0_feats is None:
+            gen0_feats = raw_feats
+        w_from_gen0 = float(sliced_wasserstein_distance(raw_feats, gen0_feats,
+                                                        n_projections=100, seed=0))
 
         rows.append({
             "generation": gen,
@@ -356,18 +484,26 @@ def run(args):
             "raw_fid": round(raw_fid, 4),
             "raw_pixel_std": round(raw_pixel_std, 6),
             "raw_pairwise_l2": round(raw_pairwise, 6),
+            "w_from_gen0": round(w_from_gen0, 4),
         })
         print(f"  fid={fid:.3f}  test_bce={bce:.3f}  pixel_std={pixel_std:.4f}  "
-              f"pairwise_l2={mean_pairwise:.4f}  post_std={post_std:.4f}"
+              f"pairwise_l2={mean_pairwise:.4f}  post_std={post_std:.4f}  w0={w_from_gen0:.3f}"
               + (f"  (raw fid={raw_fid:.3f} pixel_std={raw_pixel_std:.4f})"
                  if args.correction_lambda > 0 else ""))
 
         save_image(synthetic[:64], gen_dir / "samples.png", nrow=8)
         torch.save(synthetic, gen_dir / "synthetic.pt")
 
-        # Next generation's training set: samples, optionally mixed with fresh real
-        # (real_fraction) or with the fixed real anchor images (anchor_augment).
-        if args.anchor_augment:
+        # Next generation's training set.
+        if args.augment_real:
+            # Add the synthetic ON TOP of the real pool (accumulation, set grows).
+            # --accumulate keeps every generation's synthetic; else only this gen's.
+            if args.accumulate:
+                synthetic_history.append(synthetic)
+                current_images = torch.cat([real_pool, *synthetic_history])
+            else:
+                current_images = torch.cat([real_pool, synthetic])
+        elif args.anchor_augment:
             n_anc = len(anchor_images)
             current_images = torch.cat([synthetic[: args.num_synth - n_anc], anchor_images])
         elif args.real_fraction > 0:
@@ -432,6 +568,10 @@ def plot_collapse(output_root: Path, rows: list[dict]) -> None:
 def main():
     p = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("--dataset", choices=["mnist", "fashion_mnist", "celeba"], default="mnist",
+                   help="mnist / fashion_mnist (28x28 MLP VAE) or celeba (64x64 conv VAE).")
+    p.add_argument("--data-dir", default=CELEBA_DIR,
+                   help="CelebA image directory (used when --dataset celeba).")
     p.add_argument("--generations", type=int, default=50,
                    help="Number of generations (gen 0 is the real-data model).")
     p.add_argument("--epochs", type=int, default=60, help="Epochs per generation.")
@@ -445,10 +585,26 @@ def main():
                    help="Batch-OT correction strength lambda in "
                         "z'=(1-lambda)z+lambda*OT_target (0 = off, 1 = full snap).")
     p.add_argument("--n-anchors", type=int, default=512,
-                   help="Number of frozen, class-stratified real anchor latents.")
+                   help="Number of frozen, class-stratified real anchor latents (the POOL "
+                        "size when --anchor-minibatch is used).")
+    p.add_argument("--anchor-minibatch", type=int, default=0,
+                   help="Minibatch-OT: EMD/Sinkhorn-transport each source chunk onto a fresh "
+                        "random K-subset of the n_anchors pool (0 = off). Keeps exact OT "
+                        "tractable while n_anchors scales to 10k+; coverage builds via "
+                        "per-chunk resampling.")
     p.add_argument("--anchor-augment", action="store_true",
                    help="Baseline: retain the same n_anchors real anchor IMAGES in every "
                         "generation's training set (no OT), instead of transporting toward them.")
+    p.add_argument("--augment-real", action="store_true",
+                   help="Add the synthetic set ON TOP of the full real pool each generation "
+                        "(accumulation; training set = real_pool + synthetic, so it grows).")
+    p.add_argument("--accumulate", action="store_true",
+                   help="With --augment-real, keep EVERY generation's synthetic (real + all "
+                        "synth so far), not just the current one. Set grows unbounded.")
+    p.add_argument("--full-anchors", action="store_true",
+                   help="With --correction-lambda>0, use the ENTIRE real dataset as anchors via "
+                        "nearest-neighbour projection in the frozen gen-0 latent space "
+                        "(instead of n_anchors batch-OT).")
     p.add_argument("--ot-reg", type=float, default=0.0,
                    help="Entropic (Sinkhorn) OT regularization; 0 = exact EMD.")
     p.add_argument("--output-root", default="runs/vae_mnist")

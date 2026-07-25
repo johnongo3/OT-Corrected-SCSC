@@ -1,0 +1,69 @@
+{
+  "config": {
+    "generations": 50,
+    "epochs": 40,
+    "latent_dim": 96,
+    "num_synth": 10000,
+    "batch_size": 128,
+    "lr": 0.001,
+    "real_fraction": 0.0,
+    "correction_strength": 0.0,
+    "n_anchors": 512,
+    "ot_reg": 0.0,
+    "output_root": "runs/baseline2",
+    "seed": 42,
+    "start_generation": 0
+  },
+  "rows": [
+    {
+      "generation": 0,
+      "source": "real",
+      "test_recon": 0.01364,
+      "sample_pixel_std": 0.234834,
+      "mean_pairwise_l2": 10.025112,
+      "latent_std_mean": 0.08379,
+      "raw_pixel_std": 0.234834,
+      "raw_pairwise_l2": 10.025112
+    },
+    {
+      "generation": 1,
+      "source": "gen0 samples",
+      "test_recon": 0.01585,
+      "sample_pixel_std": 0.216891,
+      "mean_pairwise_l2": 9.327482,
+      "latent_std_mean": 0.061799,
+      "raw_pixel_std": 0.216891,
+      "raw_pairwise_l2": 9.327482
+    },
+    {
+      "generation": 2,
+      "source": "gen1 samples",
+      "test_recon": 0.017759,
+      "sample_pixel_std": 0.211933,
+      "mean_pairwise_l2": 9.205267,
+      "latent_std_mean": 0.058536,
+      "raw_pixel_std": 0.211933,
+      "raw_pairwise_l2": 9.205267
+    },
+    {
+      "generation": 3,
+      "source": "gen2 samples",
+      "test_recon": 0.018712,
+      "sample_pixel_std": 0.198542,
+      "mean_pairwise_l2": 8.708534,
+      "latent_std_mean": 0.056969,
+      "raw_pixel_std": 0.198542,
+      "raw_pairwise_l2": 8.708534
+    },
+    {
+      "generation": 4,
+      "source": "gen3 samples",
+      "test_recon": 0.019734,
+      "sample_pixel_std": 0.188901,
+      "mean_pairwise_l2": 8.406868,
+      "latent_std_mean": 0.050893,
+      "raw_pixel_std": 0.188901,
+      "raw_pairwise_l2": 8.406868
+    }
+  ]
+}

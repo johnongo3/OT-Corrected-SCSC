@@ -8,9 +8,11 @@ __pycache__/
 /dataset
 
 # Generated experiment artifacts (checkpoints, synthetic data, figures)
-/runs
 /outputs
 /outputs_rgb
+/data
+/ddpm
+/old
 
 # Model / data binaries anywhere
 *.pt

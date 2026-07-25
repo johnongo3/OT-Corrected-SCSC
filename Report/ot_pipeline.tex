@@ -1,0 +1,165 @@
+% =====================================================================
+%  ot_pipeline.tex  --  Formal schematic of the minibatch-OT collapse
+%  corrector inside one self-consuming generation.
+%
+%  Compiles standalone:   pdflatex ot_pipeline.tex   (or lualatex / Overleaf).
+%  To embed in the report: copy the tikzpicture into a figure environment
+%  (see ot_pipeline_snippet.tex); the \usetikzlibrary, \definecolor and
+%  \DeclareMathOperator lines below must live in your preamble.
+%
+%  Notation
+%    Dec_k          decoder of the (trainable) generation-k VAE
+%    Enc_0, Dec_0   encoder / decoder of the FROZEN generation-0 reference VAE
+%    z_i = mu_0(x)  posterior-mean embedding of a synthetic image under Enc_0
+%    a_j            anchor latents = Enc_0(real), class-stratified, fixed
+%    P*             optimal transport plan;  T(.) its barycentric projection
+%    lambda         correction strength
+% =====================================================================
+\documentclass[tikz,border=10pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usetikzlibrary{positioning,arrows.meta,calc,fit,backgrounds,shapes.geometric}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+% ---- muted academic palette -----------------------------------------
+\definecolor{steel}{RGB}{62,104,150}      % frozen reference / anchors
+\definecolor{amber}{RGB}{170,120,30}      % trainable module
+\definecolor{srcred}{RGB}{178,58,58}      % synthetic source latents
+\definecolor{otpur}{RGB}{112,78,160}      % OT barycentric target
+\definecolor{corrgreen}{RGB}{48,128,80}   % corrected latent z'
+
+\tikzset{
+  font=\small,
+  >=Latex,
+  module/.style={draw, rounded corners=1.5pt, minimum height=9mm,
+                 minimum width=12mm, inner sep=4pt, align=center, line width=0.7pt},
+  frozen/.style={module, draw=steel, fill=steel!7},
+  train/.style={module, draw=amber, fill=amber!9},
+  opbox/.style={module, draw=black!65, fill=black!6, minimum width=13mm},
+  data/.style={align=center, inner sep=2pt, text=black!80},
+  flow/.style={-{Latex[length=2.2mm,width=1.7mm]}, line width=0.7pt, draw=black!65},
+  sdot/.style={circle, draw=srcred, fill=srcred!22, minimum size=3.0mm,
+               inner sep=0, line width=0.5pt},
+  adot/.style={circle, draw=steel, fill=steel!22, minimum size=3.0mm,
+               inner sep=0, line width=0.5pt},
+  tdot/.style={diamond, draw=otpur, fill=otpur!22, minimum size=3.4mm,
+               inner sep=0, line width=0.5pt},
+  cdot/.style={circle, draw=corrgreen, fill=corrgreen!28, minimum size=2.8mm,
+               inner sep=0, line width=0.5pt},
+  stitle/.style={font=\small\bfseries, text=black!78},
+  note/.style={font=\scriptsize, text=black!55, align=left},
+}
+
+\begin{document}
+\begin{tikzpicture}
+
+% ============================= pipeline (top row) =============================
+\node[data]                     (z)    {$z\!\sim\!\mathcal N(0,I)$};
+\node[train,  right=6mm of z]    (deck) {$\mathrm{Dec}_{k}$};
+\node[data,   right=6mm of deck] (xk)   {$x_k$};
+\node[frozen, right=6mm of xk]   (enc0) {$\mathrm{Enc}_{0}$};
+\node[data,   right=6mm of enc0] (S)    {$\{z_i\}$};
+\node[opbox,  right=6mm of S]    (T)    {$\mathcal T_\lambda$};
+\node[data,   right=6mm of T]    (Sp)   {$\{z_i'\}$};
+\node[frozen, right=6mm of Sp]   (dec0) {$\mathrm{Dec}_{0}$};
+\node[data,   right=6mm of dec0] (xkp)  {$x_k'$};
+\node[train,  right=6mm of xkp]  (next) {gen $k{+}1$};
+
+\foreach \a/\b in {z/deck,deck/xk,xk/enc0,enc0/S,S/T,T/Sp,Sp/dec0,dec0/xkp,xkp/next}
+  \draw[flow] (\a) -- (\b);
+
+% role annotations
+\node[note, text=steel,  below=0.6mm of enc0.south] {frozen};
+\node[note, text=steel,  below=0.6mm of dec0.south] {frozen};
+\node[note, text=amber,  below=0.6mm of deck.south] {trainable};
+\node[note, text=black!55, above=0.4mm of S.north]  {$z_i\!=\!\mu_0(x_i)$};
+\node[note, text=black!55, above=0.4mm of xk.north] {samples};
+
+% self-consuming loop-back
+\draw[flow, dashed, draw=black!55]
+  (next.north) to[out=90,in=90,looseness=0.55]
+  node[above=0.3mm, font=\scriptsize, text=black!60]
+       {self-consuming loop \ ($\theta_k\!\leftarrow\!\theta_{k+1}$)}
+  (deck.north);
+
+% ============================= operator expansion =============================
+% Callout cone from the T_lambda box down to the expansion band.
+\coordinate (btl) at (-0.5,-2.0);          % band top-left
+\coordinate (btr) at (14.7,-2.0);          % band top-right
+\coordinate (bbl) at (-0.5,-6.5);          % band bottom-left
+\coordinate (bbr) at (14.7,-6.5);          % band bottom-right
+\begin{scope}[on background layer]
+  \fill[black!4] (T.south west) -- (T.south east) -- (btr) -- (btl) -- cycle;
+  \fill[black!3, rounded corners=3pt] (btl) rectangle (bbr);
+  \draw[black!30, rounded corners=3pt, line width=0.6pt] (btl) rectangle (bbr);
+\end{scope}
+\draw[dashed, black!40] (T.south west) -- (btl);
+\draw[dashed, black!40] (T.south east) -- (btr);
+\node[anchor=south west, font=\small\itshape, text=black!60] at (-0.5,-1.9)
+  {expansion of $\mathcal T_\lambda$};
+
+% stage separators
+\draw[black!20, line width=0.5pt] (4.55,-2.55) -- (4.55,-6.35);
+\draw[black!20, line width=0.5pt] (9.75,-2.55) -- (9.75,-6.35);
+
+% ---- (a) minibatch coupling ------------------------------------------------
+\node[stitle] at (2.05,-2.35) {(a)\; Minibatch coupling};
+% sources (left) and drawn K-subset of anchors (right)
+\foreach \y/\n in {-3.05/1,-3.55/2,-4.05/3} \node[sdot] (a-s\n) at (0.85,\y) {};
+\foreach \y/\n in {-2.85/1,-3.35/2,-3.85/3,-4.35/4} \node[adot] (a-a\n) at (2.75,\y) {};
+\draw[srcred!75, line width=1.3pt] (a-s1) -- (a-a1);
+\draw[srcred!55, line width=0.5pt] (a-s1) -- (a-a2);
+\draw[srcred!75, line width=1.1pt] (a-s2) -- (a-a2);
+\draw[srcred!55, line width=0.5pt] (a-s2) -- (a-a3);
+\draw[srcred!75, line width=1.2pt] (a-s3) -- (a-a3);
+\draw[srcred!55, line width=0.5pt] (a-s3) -- (a-a4);
+\node[note, text=srcred, above=0.3mm of a-s1.north] {$\hat\mu_n$};
+\node[note, text=steel,  above=0.3mm of a-a1.north] {$\hat\nu_K$};
+\node[eq, align=left] at (2.05,-4.95) {%
+  $\begin{aligned}
+     C_{ij}&=\lVert z_i-a_j\rVert^2\\[1pt]
+     P^\star&=\argmin_{P\in\Pi}\ \langle P,C\rangle\\[1pt]
+     \Pi:\ &P\mathbf 1=\tfrac1n\mathbf 1,\ \ P^{\!\top}\!\mathbf 1=\tfrac1K\mathbf 1
+   \end{aligned}$};
+\node[note] at (2.05,-6.05)
+  {$B\subset\{1,\dots,M\},\ |B|=K$, redrawn per chunk};
+
+% ---- (b) barycentric projection --------------------------------------------
+\node[stitle] at (7.15,-2.35) {(b)\; Barycentric projection};
+\node[sdot] (b-z) at (6.0,-3.5) {};
+\node[adot] (b-a1) at (7.85,-3.0) {};
+\node[adot] (b-a2) at (7.85,-4.1) {};
+\draw[steel!35, dotted, line width=0.6pt] (b-a1) -- (b-a2);
+\draw[srcred!75, line width=1.3pt] (b-z) -- (b-a1);
+\draw[srcred!70, line width=0.9pt] (b-z) -- (b-a2);
+\coordinate (b-T) at ($(b-a1)!0.33!(b-a2)$);   % 0.67 a1 + 0.33 a2
+\node[tdot] at (b-T) {};
+\node[note, text=steel,  right=1mm of b-a1] {$a_1\;(0.67)$};
+\node[note, text=steel,  right=1mm of b-a2] {$a_2\;(0.33)$};
+\node[note, text=srcred, left=1mm of b-z]   {$z_1$};
+\node[note, text=otpur, left=0.6mm of b-T]  {$T(z_1)$};
+\node[eq] at (7.15,-5.15) {%
+  $\displaystyle T(z_i)=\frac{\sum_j P^\star_{ij}\,a_j}{\sum_j P^\star_{ij}}
+                       = n\!\sum_j P^\star_{ij}\,a_j$};
+\node[note] at (7.15,-6.05)
+  {convex combination of anchors, not the nearest one};
+
+% ---- (c) lambda-blend ------------------------------------------------------
+\node[stitle] at (12.2,-2.35) {(c)\; $\lambda$-blend};
+\coordinate (c-z) at (10.9,-3.5);
+\coordinate (c-T) at (13.5,-3.5);
+\draw[black!35, dotted, line width=0.7pt] (c-z) -- (c-T);
+\foreach \l in {0.2,0.4,0.6,0.8} \fill[black!45] ($(c-z)!\l!(c-T)$) circle (0.6pt);
+\node[sdot] at (c-z) {};
+\node[tdot] at (c-T) {};
+\node[cdot] (c-zp) at ($(c-z)!0.8!(c-T)$) {};
+\node[note, text=srcred, below=0.4mm of c-z]  {$z_i$};
+\node[note, text=otpur,  below=0.4mm of c-T]  {$T(z_i)$};
+\node[note, text=corrgreen, above=0.4mm of c-zp] {$z_i'\ (\lambda{=}0.8)$};
+\node[eq] at (12.2,-4.7) {$z_i'=(1-\lambda)\,z_i+\lambda\,T(z_i)$};
+\node[note] at (12.2,-5.5)
+  {$\lambda\!=\!0$: identity \ \ $\lambda\!=\!1$: full projection};
+\node[note] at (12.2,-6.05)
+  {larger $\lambda$ $\Rightarrow$ stronger pull to the reference};
+
+\end{tikzpicture}
+\end{document}

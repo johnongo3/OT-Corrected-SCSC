@@ -1,0 +1,519 @@
+{
+  "config": {
+    "generations": 50,
+    "epochs": 40,
+    "latent_dim": 96,
+    "num_synth": 10000,
+    "batch_size": 128,
+    "lr": 0.001,
+    "real_fraction": 0.0,
+    "correction_strength": 0.0,
+    "n_anchors": 512,
+    "ot_reg": 0.0,
+    "output_root": "runs/baseline",
+    "seed": 42,
+    "start_generation": 0
+  },
+  "rows": [
+    {
+      "generation": 0,
+      "source": "real",
+      "test_recon": 0.061478,
+      "sample_pixel_std": 0.247405,
+      "mean_pairwise_l2": 10.341613,
+      "latent_std_mean": 0.113986,
+      "raw_pixel_std": 0.247405,
+      "raw_pairwise_l2": 10.341613
+    },
+    {
+      "generation": 1,
+      "source": "gen0 samples",
+      "test_recon": 0.07108,
+      "sample_pixel_std": 0.242439,
+      "mean_pairwise_l2": 10.194996,
+      "latent_std_mean": 0.089072,
+      "raw_pixel_std": 0.242439,
+      "raw_pairwise_l2": 10.194996
+    },
+    {
+      "generation": 2,
+      "source": "gen1 samples",
+      "test_recon": 0.07144,
+      "sample_pixel_std": 0.232601,
+      "mean_pairwise_l2": 9.777575,
+      "latent_std_mean": 0.077053,
+      "raw_pixel_std": 0.232601,
+      "raw_pairwise_l2": 9.777575
+    },
+    {
+      "generation": 3,
+      "source": "gen2 samples",
+      "test_recon": 0.074435,
+      "sample_pixel_std": 0.229945,
+      "mean_pairwise_l2": 9.723295,
+      "latent_std_mean": 0.086202,
+      "raw_pixel_std": 0.229945,
+      "raw_pairwise_l2": 9.723295
+    },
+    {
+      "generation": 4,
+      "source": "gen3 samples",
+      "test_recon": 0.079824,
+      "sample_pixel_std": 0.230709,
+      "mean_pairwise_l2": 9.662969,
+      "latent_std_mean": 0.074143,
+      "raw_pixel_std": 0.230709,
+      "raw_pairwise_l2": 9.662969
+    },
+    {
+      "generation": 5,
+      "source": "gen4 samples",
+      "test_recon": 0.079544,
+      "sample_pixel_std": 0.246573,
+      "mean_pairwise_l2": 10.255463,
+      "latent_std_mean": 0.049956,
+      "raw_pixel_std": 0.246573,
+      "raw_pairwise_l2": 10.255463
+    },
+    {
+      "generation": 6,
+      "source": "gen5 samples",
+      "test_recon": 0.081584,
+      "sample_pixel_std": 0.26994,
+      "mean_pairwise_l2": 11.268731,
+      "latent_std_mean": 0.054353,
+      "raw_pixel_std": 0.26994,
+      "raw_pairwise_l2": 11.268731
+    },
+    {
+      "generation": 7,
+      "source": "gen6 samples",
+      "test_recon": 0.081168,
+      "sample_pixel_std": 0.261206,
+      "mean_pairwise_l2": 10.944523,
+      "latent_std_mean": 0.073241,
+      "raw_pixel_std": 0.261206,
+      "raw_pairwise_l2": 10.944523
+    },
+    {
+      "generation": 8,
+      "source": "gen7 samples",
+      "test_recon": 0.085586,
+      "sample_pixel_std": 0.25161,
+      "mean_pairwise_l2": 10.634365,
+      "latent_std_mean": 0.065466,
+      "raw_pixel_std": 0.25161,
+      "raw_pairwise_l2": 10.634365
+    },
+    {
+      "generation": 9,
+      "source": "gen8 samples",
+      "test_recon": 0.082881,
+      "sample_pixel_std": 0.251581,
+      "mean_pairwise_l2": 10.603707,
+      "latent_std_mean": 0.065786,
+      "raw_pixel_std": 0.251581,
+      "raw_pairwise_l2": 10.603707
+    },
+    {
+      "generation": 10,
+      "source": "gen9 samples",
+      "test_recon": 0.085103,
+      "sample_pixel_std": 0.253639,
+      "mean_pairwise_l2": 10.675827,
+      "latent_std_mean": 0.060481,
+      "raw_pixel_std": 0.253639,
+      "raw_pairwise_l2": 10.675827
+    },
+    {
+      "generation": 11,
+      "source": "gen10 samples",
+      "test_recon": 0.085888,
+      "sample_pixel_std": 0.244761,
+      "mean_pairwise_l2": 10.269977,
+      "latent_std_mean": 0.070215,
+      "raw_pixel_std": 0.244761,
+      "raw_pairwise_l2": 10.269977
+    },
+    {
+      "generation": 12,
+      "source": "gen11 samples",
+      "test_recon": 0.096788,
+      "sample_pixel_std": 0.261723,
+      "mean_pairwise_l2": 10.962441,
+      "latent_std_mean": 0.058802,
+      "raw_pixel_std": 0.261723,
+      "raw_pairwise_l2": 10.962441
+    },
+    {
+      "generation": 13,
+      "source": "gen12 samples",
+      "test_recon": 0.087926,
+      "sample_pixel_std": 0.266454,
+      "mean_pairwise_l2": 11.263004,
+      "latent_std_mean": 0.0561,
+      "raw_pixel_std": 0.266454,
+      "raw_pairwise_l2": 11.263004
+    },
+    {
+      "generation": 14,
+      "source": "gen13 samples",
+      "test_recon": 0.08772,
+      "sample_pixel_std": 0.264735,
+      "mean_pairwise_l2": 11.278372,
+      "latent_std_mean": 0.071289,
+      "raw_pixel_std": 0.264735,
+      "raw_pairwise_l2": 11.278372
+    },
+    {
+      "generation": 15,
+      "source": "gen14 samples",
+      "test_recon": 0.09511,
+      "sample_pixel_std": 0.255418,
+      "mean_pairwise_l2": 10.773355,
+      "latent_std_mean": 0.0725,
+      "raw_pixel_std": 0.255418,
+      "raw_pairwise_l2": 10.773355
+    },
+    {
+      "generation": 16,
+      "source": "gen15 samples",
+      "test_recon": 0.091532,
+      "sample_pixel_std": 0.263684,
+      "mean_pairwise_l2": 11.245987,
+      "latent_std_mean": 0.087969,
+      "raw_pixel_std": 0.263684,
+      "raw_pairwise_l2": 11.245987
+    },
+    {
+      "generation": 17,
+      "source": "gen16 samples",
+      "test_recon": 0.098921,
+      "sample_pixel_std": 0.258059,
+      "mean_pairwise_l2": 10.902667,
+      "latent_std_mean": 0.079221,
+      "raw_pixel_std": 0.258059,
+      "raw_pairwise_l2": 10.902667
+    },
+    {
+      "generation": 18,
+      "source": "gen17 samples",
+      "test_recon": 0.08949,
+      "sample_pixel_std": 0.261114,
+      "mean_pairwise_l2": 11.122789,
+      "latent_std_mean": 0.068954,
+      "raw_pixel_std": 0.261114,
+      "raw_pairwise_l2": 11.122789
+    },
+    {
+      "generation": 19,
+      "source": "gen18 samples",
+      "test_recon": 0.092215,
+      "sample_pixel_std": 0.264729,
+      "mean_pairwise_l2": 11.254893,
+      "latent_std_mean": 0.063995,
+      "raw_pixel_std": 0.264729,
+      "raw_pairwise_l2": 11.254893
+    },
+    {
+      "generation": 20,
+      "source": "gen19 samples",
+      "test_recon": 0.094879,
+      "sample_pixel_std": 0.273318,
+      "mean_pairwise_l2": 11.612566,
+      "latent_std_mean": 0.069824,
+      "raw_pixel_std": 0.273318,
+      "raw_pairwise_l2": 11.612566
+    },
+    {
+      "generation": 21,
+      "source": "gen20 samples",
+      "test_recon": 0.093254,
+      "sample_pixel_std": 0.276854,
+      "mean_pairwise_l2": 11.66794,
+      "latent_std_mean": 0.061559,
+      "raw_pixel_std": 0.276854,
+      "raw_pairwise_l2": 11.66794
+    },
+    {
+      "generation": 22,
+      "source": "gen21 samples",
+      "test_recon": 0.092908,
+      "sample_pixel_std": 0.285304,
+      "mean_pairwise_l2": 12.105048,
+      "latent_std_mean": 0.072996,
+      "raw_pixel_std": 0.285304,
+      "raw_pairwise_l2": 12.105048
+    },
+    {
+      "generation": 23,
+      "source": "gen22 samples",
+      "test_recon": 0.092159,
+      "sample_pixel_std": 0.271848,
+      "mean_pairwise_l2": 11.523738,
+      "latent_std_mean": 0.088861,
+      "raw_pixel_std": 0.271848,
+      "raw_pairwise_l2": 11.523738
+    },
+    {
+      "generation": 24,
+      "source": "gen23 samples",
+      "test_recon": 0.10169,
+      "sample_pixel_std": 0.269191,
+      "mean_pairwise_l2": 11.394111,
+      "latent_std_mean": 0.068688,
+      "raw_pixel_std": 0.269191,
+      "raw_pairwise_l2": 11.394111
+    },
+    {
+      "generation": 25,
+      "source": "gen24 samples",
+      "test_recon": 0.096233,
+      "sample_pixel_std": 0.26899,
+      "mean_pairwise_l2": 11.478275,
+      "latent_std_mean": 0.07429,
+      "raw_pixel_std": 0.26899,
+      "raw_pairwise_l2": 11.478275
+    },
+    {
+      "generation": 26,
+      "source": "gen25 samples",
+      "test_recon": 0.104427,
+      "sample_pixel_std": 0.266585,
+      "mean_pairwise_l2": 11.391516,
+      "latent_std_mean": 0.088222,
+      "raw_pixel_std": 0.266585,
+      "raw_pairwise_l2": 11.391516
+    },
+    {
+      "generation": 27,
+      "source": "gen26 samples",
+      "test_recon": 0.091943,
+      "sample_pixel_std": 0.258485,
+      "mean_pairwise_l2": 11.064688,
+      "latent_std_mean": 0.08866,
+      "raw_pixel_std": 0.258485,
+      "raw_pairwise_l2": 11.064688
+    },
+    {
+      "generation": 28,
+      "source": "gen27 samples",
+      "test_recon": 0.092184,
+      "sample_pixel_std": 0.261834,
+      "mean_pairwise_l2": 11.052339,
+      "latent_std_mean": 0.067762,
+      "raw_pixel_std": 0.261834,
+      "raw_pairwise_l2": 11.052339
+    },
+    {
+      "generation": 29,
+      "source": "gen28 samples",
+      "test_recon": 0.094543,
+      "sample_pixel_std": 0.260308,
+      "mean_pairwise_l2": 11.135605,
+      "latent_std_mean": 0.073347,
+      "raw_pixel_std": 0.260308,
+      "raw_pairwise_l2": 11.135605
+    },
+    {
+      "generation": 30,
+      "source": "gen29 samples",
+      "test_recon": 0.092888,
+      "sample_pixel_std": 0.257908,
+      "mean_pairwise_l2": 11.02771,
+      "latent_std_mean": 0.065909,
+      "raw_pixel_std": 0.257908,
+      "raw_pairwise_l2": 11.02771
+    },
+    {
+      "generation": 31,
+      "source": "gen30 samples",
+      "test_recon": 0.0904,
+      "sample_pixel_std": 0.251644,
+      "mean_pairwise_l2": 10.730065,
+      "latent_std_mean": 0.055679,
+      "raw_pixel_std": 0.251644,
+      "raw_pairwise_l2": 10.730065
+    },
+    {
+      "generation": 32,
+      "source": "gen31 samples",
+      "test_recon": 0.093993,
+      "sample_pixel_std": 0.251766,
+      "mean_pairwise_l2": 10.712192,
+      "latent_std_mean": 0.06262,
+      "raw_pixel_std": 0.251766,
+      "raw_pairwise_l2": 10.712192
+    },
+    {
+      "generation": 33,
+      "source": "gen32 samples",
+      "test_recon": 0.096132,
+      "sample_pixel_std": 0.248517,
+      "mean_pairwise_l2": 10.667237,
+      "latent_std_mean": 0.066484,
+      "raw_pixel_std": 0.248517,
+      "raw_pairwise_l2": 10.667237
+    },
+    {
+      "generation": 34,
+      "source": "gen33 samples",
+      "test_recon": 0.097143,
+      "sample_pixel_std": 0.243674,
+      "mean_pairwise_l2": 10.472331,
+      "latent_std_mean": 0.072001,
+      "raw_pixel_std": 0.243674,
+      "raw_pairwise_l2": 10.472331
+    },
+    {
+      "generation": 35,
+      "source": "gen34 samples",
+      "test_recon": 0.093978,
+      "sample_pixel_std": 0.244256,
+      "mean_pairwise_l2": 10.51089,
+      "latent_std_mean": 0.07026,
+      "raw_pixel_std": 0.244256,
+      "raw_pairwise_l2": 10.51089
+    },
+    {
+      "generation": 36,
+      "source": "gen35 samples",
+      "test_recon": 0.090876,
+      "sample_pixel_std": 0.245629,
+      "mean_pairwise_l2": 10.489592,
+      "latent_std_mean": 0.06164,
+      "raw_pixel_std": 0.245629,
+      "raw_pairwise_l2": 10.489592
+    },
+    {
+      "generation": 37,
+      "source": "gen36 samples",
+      "test_recon": 0.090952,
+      "sample_pixel_std": 0.246048,
+      "mean_pairwise_l2": 10.588427,
+      "latent_std_mean": 0.062434,
+      "raw_pixel_std": 0.246048,
+      "raw_pairwise_l2": 10.588427
+    },
+    {
+      "generation": 38,
+      "source": "gen37 samples",
+      "test_recon": 0.091484,
+      "sample_pixel_std": 0.243562,
+      "mean_pairwise_l2": 10.453406,
+      "latent_std_mean": 0.056318,
+      "raw_pixel_std": 0.243562,
+      "raw_pairwise_l2": 10.453406
+    },
+    {
+      "generation": 39,
+      "source": "gen38 samples",
+      "test_recon": 0.092484,
+      "sample_pixel_std": 0.239573,
+      "mean_pairwise_l2": 10.316077,
+      "latent_std_mean": 0.050239,
+      "raw_pixel_std": 0.239573,
+      "raw_pairwise_l2": 10.316077
+    },
+    {
+      "generation": 40,
+      "source": "gen39 samples",
+      "test_recon": 0.092236,
+      "sample_pixel_std": 0.234166,
+      "mean_pairwise_l2": 10.109684,
+      "latent_std_mean": 0.054259,
+      "raw_pixel_std": 0.234166,
+      "raw_pairwise_l2": 10.109684
+    },
+    {
+      "generation": 41,
+      "source": "gen40 samples",
+      "test_recon": 0.09512,
+      "sample_pixel_std": 0.232056,
+      "mean_pairwise_l2": 10.052927,
+      "latent_std_mean": 0.063454,
+      "raw_pixel_std": 0.232056,
+      "raw_pairwise_l2": 10.052927
+    },
+    {
+      "generation": 42,
+      "source": "gen41 samples",
+      "test_recon": 0.093859,
+      "sample_pixel_std": 0.23298,
+      "mean_pairwise_l2": 9.958323,
+      "latent_std_mean": 0.055804,
+      "raw_pixel_std": 0.23298,
+      "raw_pairwise_l2": 9.958323
+    },
+    {
+      "generation": 43,
+      "source": "gen42 samples",
+      "test_recon": 0.096144,
+      "sample_pixel_std": 0.236487,
+      "mean_pairwise_l2": 10.157012,
+      "latent_std_mean": 0.074174,
+      "raw_pixel_std": 0.236487,
+      "raw_pairwise_l2": 10.157012
+    },
+    {
+      "generation": 44,
+      "source": "gen43 samples",
+      "test_recon": 0.093768,
+      "sample_pixel_std": 0.228362,
+      "mean_pairwise_l2": 9.855023,
+      "latent_std_mean": 0.065277,
+      "raw_pixel_std": 0.228362,
+      "raw_pairwise_l2": 9.855023
+    },
+    {
+      "generation": 45,
+      "source": "gen44 samples",
+      "test_recon": 0.095534,
+      "sample_pixel_std": 0.227047,
+      "mean_pairwise_l2": 9.738916,
+      "latent_std_mean": 0.059742,
+      "raw_pixel_std": 0.227047,
+      "raw_pairwise_l2": 9.738916
+    },
+    {
+      "generation": 46,
+      "source": "gen45 samples",
+      "test_recon": 0.095648,
+      "sample_pixel_std": 0.223153,
+      "mean_pairwise_l2": 9.62648,
+      "latent_std_mean": 0.077438,
+      "raw_pixel_std": 0.223153,
+      "raw_pairwise_l2": 9.62648
+    },
+    {
+      "generation": 47,
+      "source": "gen46 samples",
+      "test_recon": 0.098707,
+      "sample_pixel_std": 0.2224,
+      "mean_pairwise_l2": 9.638609,
+      "latent_std_mean": 0.064067,
+      "raw_pixel_std": 0.2224,
+      "raw_pairwise_l2": 9.638609
+    },
+    {
+      "generation": 48,
+      "source": "gen47 samples",
+      "test_recon": 0.096398,
+      "sample_pixel_std": 0.225068,
+      "mean_pairwise_l2": 9.670358,
+      "latent_std_mean": 0.060004,
+      "raw_pixel_std": 0.225068,
+      "raw_pairwise_l2": 9.670358
+    },
+    {
+      "generation": 49,
+      "source": "gen48 samples",
+      "test_recon": 0.096459,
+      "sample_pixel_std": 0.230709,
+      "mean_pairwise_l2": 9.922895,
+      "latent_std_mean": 0.050215,
+      "raw_pixel_std": 0.230709,
+      "raw_pairwise_l2": 9.922895
+    }
+  ]
+}

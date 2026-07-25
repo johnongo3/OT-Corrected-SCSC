@@ -1,0 +1,69 @@
+{
+  "config": {
+    "generations": 30,
+    "epochs": 40,
+    "num_synth": 10000,
+    "batch_size": 128,
+    "lr": 0.001,
+    "real_fraction": 0.0,
+    "correction_lambda": 1.0,
+    "n_anchors": 512,
+    "anchor_augment": false,
+    "augment_real": false,
+    "accumulate": false,
+    "full_anchors": true,
+    "ot_reg": 0.0,
+    "output_root": "runs/experiment_lam10_full_anch",
+    "seed": 42
+  },
+  "rows": [
+    {
+      "generation": 0,
+      "source": "real",
+      "fid": 216.671,
+      "test_bce": 105.0576,
+      "sample_pixel_std": 0.148991,
+      "mean_pairwise_l2": 7.773932,
+      "post_std_mean": 0.166254,
+      "raw_fid": 298.2476,
+      "raw_pixel_std": 0.135784,
+      "raw_pairwise_l2": 7.300765
+    },
+    {
+      "generation": 1,
+      "source": "gen0 samples",
+      "fid": 210.9311,
+      "test_bce": 117.2139,
+      "sample_pixel_std": 0.150441,
+      "mean_pairwise_l2": 7.789811,
+      "post_std_mean": 0.166411,
+      "raw_fid": 359.7159,
+      "raw_pixel_std": 0.130948,
+      "raw_pairwise_l2": 6.874695
+    },
+    {
+      "generation": 2,
+      "source": "gen1 samples",
+      "fid": 197.8116,
+      "test_bce": 124.3103,
+      "sample_pixel_std": 0.157368,
+      "mean_pairwise_l2": 8.098639,
+      "post_std_mean": 0.069086,
+      "raw_fid": 335.326,
+      "raw_pixel_std": 0.138183,
+      "raw_pairwise_l2": 7.155941
+    },
+    {
+      "generation": 3,
+      "source": "gen2 samples",
+      "fid": 186.567,
+      "test_bce": 125.7358,
+      "sample_pixel_std": 0.158262,
+      "mean_pairwise_l2": 8.107768,
+      "post_std_mean": 0.068512,
+      "raw_fid": 312.4395,
+      "raw_pixel_std": 0.141758,
+      "raw_pairwise_l2": 7.273861
+    }
+  ]
+}
